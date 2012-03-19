@@ -1,0 +1,105 @@
+<meta http-equiv="content-type" content="text/html" charset=utf-8" />
+<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="draw_component.js"></script>
+<script type="text/javascript" >
+jQuery(document).ready(function(){
+
+
+var draw_circle = 
+'F0 "C" -50 50 60 H V C CNN'+'\r\n'+
+'F1 "C_FILL" 150 150 60 H V C CNN'+'\r\n'+
+"C -500 -500 250 0 1 0 f"+'\r\n'+
+"C -500 500 250 0 1 0 N"+'\r\n'+
+"C 500 -500 250 0 1 0 F"+'\r\n'+
+"C 500 500 250 0 1 100 N";
+
+/*
+
+*/
+var DrawPanel = new DrawPanObj(document.getElementById("id_view"),draw_circle);
+DrawPanel.Draw();	
+
+// using bind
+$('#id_view').bind('mousewheel', function(event, delta) {
+  //  console.log(delta);
+});
+
+$(function() {
+   $("body").mousewheel(function(event, delta) {
+
+   	
+    this.scrollLeft -= (delta * 30);
+	event.preventDefault();
+	
+	DrawPanel.Clear();
+	
+	
+	if ((event.ctrlKey)&&(!event.shiftKey))  // horizontal pan
+	{
+		//DrawPanel.originx += delta*10;
+	}
+	if ((event.shiftKey)&&(!event.ctrlKey)) // vertical pan
+	{
+		//DrawPanel.originy += delta*10;
+	}
+	if ((!event.shiftKey)&&(!event.ctrlKey)) //zoom
+	{
+		DrawPanel.mousex = event.clientX - DrawPanel.canvas.offsetLeft;
+	    //console.log("mousex="+DrawPanel.mousex);
+		DrawPanel.mousey = event.clientY - DrawPanel.canvas.offsetTop;
+		//console.log("mousey="+DrawPanel.mousey);
+		if ((delta > 0)&&(DrawPanel.iscale<16))
+		{
+			DrawPanel.iscale++;
+			DrawPanel.zoom=1.4;
+		}
+		if ((delta < 0)&&(DrawPanel.iscale>0))
+		{
+			DrawPanel.iscale--;
+			DrawPanel.zoom=1/1.4;
+		}	
+		/*
+		if ((delta > 0)&&(DrawPanel.iscale<16))
+		{
+			DrawPanel.iscale++;
+			DrawPanel.zoom=2;
+		}
+		if ((delta < 0)&&(DrawPanel.iscale>0))
+		{
+			DrawPanel.iscale--;
+			DrawPanel.zoom=0.5;
+		}	
+		*/
+		
+		DrawPanel.context.translate( DrawPanel.originx, DrawPanel.originy);
+		DrawPanel.context.scale(DrawPanel.zoom,DrawPanel.zoom);
+		DrawPanel.context.translate(
+			-( DrawPanel.mousex / DrawPanel.scale + DrawPanel.originx - DrawPanel.mousex / ( DrawPanel.scale * DrawPanel.zoom ) ),
+			-( DrawPanel.mousey / DrawPanel.scale + DrawPanel.originy - DrawPanel.mousey / ( DrawPanel.scale * DrawPanel.zoom ) )
+			
+		);
+
+		DrawPanel.originx += ( DrawPanel.mousex / DrawPanel.scale - DrawPanel.mousex / ( DrawPanel.scale * DrawPanel.zoom ) );
+		DrawPanel.originy += ( DrawPanel.mousey / DrawPanel.scale - DrawPanel.mousey / ( DrawPanel.scale * DrawPanel.zoom ) );
+		DrawPanel.scale *= DrawPanel.zoom;
+		console.log("scale="+DrawPanel.scale);
+	
+	}
+		
+	DrawPanel.Draw();
+   
+   });
+});
+});
+</script>
+
+<style>
+canvas{
+   border:1px solid black;
+   /*height:600px;
+   width:600px;*/
+}
+</style>
+TEST canvas<br>
+<canvas width="500" height="500" id="id_view">Your browser is bad!</canvas>
