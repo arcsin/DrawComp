@@ -51,11 +51,9 @@ function DrawPanObj(_canvas,draw_section)
 DrawPanObj.prototype.Clear = function()
 {
 // clear
-	this.context.clearRect(this.originx,this.originy ,
+	this.context.clearRect(this.originx-this.canvas.width/this.scale/2,
+			       this.originy-this.canvas.height/this.scale/2,
 	this.canvas.width/this.scale, this.canvas.height/this.scale);
-	//this.context.strokeStyle ="rgb(160, 160, 0)";  //  color
-	//this.context.lineWidth = 1;
-	//this.context.strokeRect(this.originx,this.originy , this.canvas.width/this.scale, this.canvas.height/this.scale); 
 	
 }
 
@@ -651,8 +649,8 @@ context.strokeStyle ="rgb(128,255, 128)";  //  color
 }
 */
 
+DrawPanObj.prototype.BestScale = function(){
 
-function BestScale(){
 /*	str_line = str_line.replace(/\s+/g,' ');
 	
 	
@@ -1146,10 +1144,12 @@ switch (args[0]) {
     alert("["+args[0]+"] - unknown letter in COMP//DRAW");
 */
 
-	//this.iscale = 1;
-	//this.originx = 0;
-	//this.originy = 0;
-	
+	this.iscale = 1;
+	this.originx = 0;
+	this.originy = 0;
+	this.scale = 0.2;
+	this.context.translate( this.canvas.width/2,this.canvas.height/2);
+	this.context.scale(this.scale,this.scale);
 }
 
   

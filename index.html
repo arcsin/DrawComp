@@ -14,10 +14,9 @@ var draw_circle =
 "C 500 -500 250 0 1 0 F"+'\r\n'+
 "C 500 500 250 0 1 100 N";
 
-/*
 
-*/
 var DrawPanel = new DrawPanObj(document.getElementById("id_view"),draw_circle);
+DrawPanel.BestScale();
 DrawPanel.Draw();	
 
 // using bind
@@ -45,9 +44,9 @@ $(function() {
 	}
 	if ((!event.shiftKey)&&(!event.ctrlKey)) //zoom
 	{
-		DrawPanel.mousex = event.clientX - DrawPanel.canvas.offsetLeft;
+		DrawPanel.mousex = event.clientX - DrawPanel.canvas.offsetLeft - DrawPanel.canvas.width/2;
 	    //console.log("mousex="+DrawPanel.mousex);
-		DrawPanel.mousey = event.clientY - DrawPanel.canvas.offsetTop;
+		DrawPanel.mousey = event.clientY - DrawPanel.canvas.offsetTop - DrawPanel.canvas.height/2;
 		//console.log("mousey="+DrawPanel.mousey);
 		if ((delta > 0)&&(DrawPanel.iscale<16))
 		{
@@ -83,7 +82,7 @@ $(function() {
 		DrawPanel.originx += ( DrawPanel.mousex / DrawPanel.scale - DrawPanel.mousex / ( DrawPanel.scale * DrawPanel.zoom ) );
 		DrawPanel.originy += ( DrawPanel.mousey / DrawPanel.scale - DrawPanel.mousey / ( DrawPanel.scale * DrawPanel.zoom ) );
 		DrawPanel.scale *= DrawPanel.zoom;
-		console.log("scale="+DrawPanel.scale);
+		//console.log("scale="+DrawPanel.scale);
 	
 	}
 		
